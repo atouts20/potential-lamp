@@ -1,6 +1,4 @@
-spring:
-  application:
-    name: springoauthclient
+spring:   
   cloud:
     consul:
       port: 8500
