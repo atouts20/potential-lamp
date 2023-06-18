@@ -1,4 +1,4 @@
-spring:   
+spring:
   cloud:
     consul:
       port: 8500
@@ -36,9 +36,7 @@ spring:
               maxBackOff: 500ms
               factor: 2
               basedOnPreviousValue: false
-    gateway:
-      default-filters:
-        - TokenRelay=
+ 
       routes:
         - id: route
           uri: http://localhost:9980/
@@ -58,7 +56,7 @@ spring:
             redirect-uri: http://127.0.0.1:9999/login/oauth2/code/spring
         provider:
           spring:
-            issuer-uri: http://localhost:9000   
+            issuer-uri: http://localhost:9000
 
 
 resilience4j:
