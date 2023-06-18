@@ -1,24 +1,100 @@
-info:
-    system: Polar Bookshop
+spring:
+    cloud:
+        consul:
+            port: 8500
+            host: 127.0.0.1
+            enabled: true
+        config:
+            enabled: false # When using Config Service, set to true
+            uri: http://localhost:8888
+            request-connect-timeout: 5000 # 5s
+            request-read-timeout: 5000 # 5s
+            fail-fast: false # In production, set to true
+            retry:
+                max-attempts: 6
+                initial-interval: 1000 # 1s
+                max-interval: 2000 # 2s
+                multiplier: 1.1
+        gateway:
+            httpclient:
+                connect-timeout: 2000 # 2s
+                response-timeout: 5s
+                pool:
+                    type: elastic
+                    max-idle-time: 15s
+                    max-life-time: 60s
+            default-filters:
+                - TokenRelay=
+                - name: Retry
+                  args:
+                      retries: 3
+                      methods: GET
+                      series: SERVER_ERROR
+                      exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+                      backoff:
+                          firstBackoff: 50ms
+                          maxBackOff: 500ms
+                          factor: 2
+                          basedOnPreviousValue: false
+
+            routes:
+                - id: route
+                  uri: http://localhost:9980/
+                  predicates:
+                      - Path=/**
+    security:
+        oauth2:
+            client:
+                registration:
+                    gateway:
+                        provider: spring
+                        client-id: client
+                        client-secret: secret
+                        scope: openid, profile, user.read
+                        authorization-grant-type: authorization_code
+                        client-authorization-method: client_secret_basic
+                        redirect-uri: http://127.0.0.1:9999/login/oauth2/code/spring
+                provider:
+                    spring:
+                        issuer-uri: http://localhost:9000
+
+
+resilience4j:
+    circuitbreaker:
+        configs:
+            default:
+                slidingWindowSize: 20
+                permittedNumberOfCallsInHalfOpenState: 5
+                failureRateThreshold: 50
+                waitDurationInOpenState: 15000
+    timelimiter:
+        configs:
+            default:
+                timeoutDuration: 5s
+
 logging:
     group:
         circuitbreaker: io.github.resilience4j, org.springframework.cloud.circuitbreaker
     level:
         circuitbreaker: info
     pattern:
-        level: '%5p [${spring.application.name},%X{trace_id},%X{span_id}]'
+        level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+info:
+    system: Polar Bookshop
+
 management:
-    endpoint:
-        health:
-            probes:
-                enabled: true
-            show-components: always
-            show-details: always
     endpoints:
         web:
             exposure:
-                include: configprops, env, gateway, health, heapdump, info, loggers,
-                    mappings, prometheus
+                include: configprops, env, gateway, health, heapdump, info, loggers, mappings, prometheus
+    endpoint:
+        health:
+            show-details: always
+            show-components: always
+            probes:
+                enabled: true
+
     info:
         env:
             enabled: true
@@ -29,59 +105,7 @@ management:
     metrics:
         tags:
             application: ${spring.application.name}
-resilience4j:
-    circuitbreaker:
-        configs:
-            default:
-                failureRateThreshold: 50
-                permittedNumberOfCallsInHalfOpenState: 5
-                slidingWindowSize: 20
-                waitDurationInOpenState: 15000
-    timelimiter:
-        configs:
-            default:
-                timeoutDuration: 5s
-spring:
-    cloud:
-        config:
-            enabled: false
-            fail-fast: false
-            request-connect-timeout: 5000
-            request-read-timeout: 5000
-            retry:
-                initial-interval: 1000
-                max-attempts: 6
-                max-interval: 2000
-                multiplier: 1.1
-            uri: http://localhost:8888
-        consul:
-            enabled: true
-            host: 127.0.0.1
-            port: 8500
-        gateway:
-            default-filters: '[TokenRelay=, {name=Retry, args={retries=3, methods=GET,
-                series=SERVER_ERROR, exceptions=java.io.IOException, java.util.concurrent.TimeoutException,
-                backoff={firstBackoff=50ms, maxBackOff=500ms, factor=2, basedOnPreviousValue=false}}}]'
-            httpclient:
-                connect-timeout: 2000
-                pool:
-                    max-idle-time: 15s
-                    max-life-time: 60s
-                    type: elastic
-                response-timeout: 5s
-            routes: '[{id=route, uri=http://localhost:9980/, predicates=[Path=/**]}]'
-    security:
-        oauth2:
-            client:
-                provider:
-                    spring:
-                        issuer-uri: http://localhost:9000
-                registration:
-                    gateway:
-                        authorization-grant-type: authorization_code
-                        client-authorization-method: client_secret_basic
-                        client-id: client
-                        client-secret: secret
-                        provider: spring
-                        redirect-uri: http://127.0.0.1:9999/login/oauth2/code/spring
-                        scope: openid, profile, user.read
+
+
+
+
