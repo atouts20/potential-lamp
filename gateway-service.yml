@@ -36,7 +36,7 @@ spring:
               maxBackOff: 500ms
               factor: 2
               basedOnPreviousValue: false
- 
+
       routes:
         - id: route
           uri: http://localhost:9980/
@@ -104,4 +104,8 @@ management:
       enabled: true
   metrics:
     tags:
-      application: ${spring.application.name}            
+      application: ${spring.application.name}
+
+
+
+
