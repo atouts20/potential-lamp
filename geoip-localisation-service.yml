@@ -1,4 +1,10 @@
 spring:
+  cloud:
+    consul:        
+      config:
+        host: 127.0.0.1
+        port: 8500
+        enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/geoipdb
