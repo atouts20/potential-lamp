@@ -71,7 +71,11 @@ spring:
                 backoff:
                   firstBackoff: 10ms
                   maxBackoff: 500ms
-
+    consul:
+      config:
+        host: 127.0.0.1
+        port: 8500
+        enabled: true
 resilience4j:
   circuitbreaker:
     instances:
