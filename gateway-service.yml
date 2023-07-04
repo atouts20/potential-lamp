@@ -32,12 +32,7 @@ spring:
       port: 11620
       password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
       username: default
-  
-    consul:
-      config:
-        host: 127.0.0.1
-        port: 8500
-        enabled: true
+
 resilience4j:
   circuitbreaker:
     instances:
