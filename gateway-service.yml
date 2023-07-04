@@ -32,7 +32,45 @@ spring:
       port: 11620
       password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
       username: default
-  
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay=
+        - SaveSession
+      routes:
+        - id: resource-server
+          uri: http://localhost:9980/
+          predicates:
+            - Path=/**
+        - id: geo-service
+          uri: http://localhost:7896/
+          predicates:
+            - Path=/**
+        - id: catalogue-route
+          uri: http://localhost:7892/
+          predicates:
+            - Path=/**
+        - id: entite-route
+          uri: http://localhost:7892/
+          predicates:
+            - Path=/**
+        - id: geoip-route
+          uri: http://localhost:7850/
+          predicates:
+            - Path=/api/v1/**
+        - id: customer-route
+          uri: http://localhost:7893/
+          predicates:
+            - Path=/**
+          filters:
+
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
     consul:
       config:
         host: 127.0.0.1
