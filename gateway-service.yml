@@ -38,10 +38,7 @@ management:
     os:
       enabled: true
 
-spring:
-  application:
-    name: gateway-service
-
+spring: 
   security:
     oauth2:
       client:
