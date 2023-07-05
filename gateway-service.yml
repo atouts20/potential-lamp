@@ -16,11 +16,10 @@ spring:
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
             scope: openid
-            authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:9888/login/oauth2/code/spring
+            authorization-grant-type: authorization_code 
         provider:
           spring:
-            issuer-uri: http://localhost:9000
+            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
   session:
     store-type: redis
     redis:
