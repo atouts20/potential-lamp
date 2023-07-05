@@ -10,16 +10,16 @@ spring:
   security:
     oauth2:
       client:
+        provider:
+          my-keycloak-provider:
+            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
         registration:
-          gateway:
-            provider: spring
+          keycloak-spring-gateway-client:
+            provider: my-keycloak-provider
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
-            scope: openid
             authorization-grant-type: authorization_code
-        provider:
-          spring:
-            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
   session:
     store-type: redis
     redis:
