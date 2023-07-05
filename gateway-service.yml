@@ -1,125 +1,15 @@
-management:
-  health:
-    redis:
-      enabled: false
-logging:
-  level:
-    org.springframework.cloud.gateway: TRACE
-
 spring:
   security:
     oauth2:
       client:
-        registration:
-          gateway:
-            provider: spring
-            client-id: client
-            client-secret: secret
-            scope: openid, profile, user.read
-            authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:9888/login/oauth2/code/spring
         provider:
-          spring:
-            issuer-uri: http://localhost:9000
-  session:
-    store-type: redis
-    redis:
-      flush-mode: on_save
-      namespace: spring:session
-  data:
-    redis:
-      host: redis-11620.c10.us-east-1-2.ec2.cloud.redislabs.com
-      port: 11620
-      password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
-      username: default
-  cloud:
-    gateway:
-      httpclient:
-        connect-timeout: 1000
-        response-timeout: 5s
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods:
-            - GET
-            - POST
-            - PUT
+          my-keycloak-provider:
+            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
+        registration:
+          keycloak-spring-gateway-client:
+            provider: my-keycloak-provider
+            client-id: atouts-gateway-client
+            client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
 
-      default-filters:
-        - SaveSession
-      routes:
-        - id: resource-server
-          uri: http://localhost:9980/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: geo-service
-          uri: http://localhost:7896/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: catalogue-route
-          uri: http://localhost:7892/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: entite-route
-          uri: http://localhost:7892/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: geoip-route
-          uri: http://localhost:7850/
-          predicates:
-            - Path=/api/v1/**
-          filters:
-            - TokenRelay=
-        - id: customer-route
-          uri: http://localhost:7893/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-            - name: Retry
-              args:
-                retries: 30
-                methods: GET
-                backoff:
-                  firstBackoff: 10ms
-                  maxBackoff: 500ms
-
-    consul:
-      config:
-        host: 127.0.0.1
-        port: 8500
-        enabled: true
-resilience4j:
-  circuitbreaker:
-    instances:
-      resourceServer:
-        slidingWindowSize: 10
-        permittedNumberOfCallsInHalfOpenState: 5
-        failureRateThreshold: 50
-        waitDurationInOpenState: 10000
-  timelimiter:
-    configs:
-      resourceServer:
-        timeoutDuration: 20s
-
-
-springdoc:
-    swagger-ui:
-        urls:
-        -   name: GEOIP Service APIs
-            url: /geoip-localisation-service/v3/api-docs
-        -   name: CLIENT Service APIs
-            url: /client-service/v3/api-docs
-        -   name: CATEGORIES Service APIs
-            url: /categories-service/v3/api-docs
-        -   name: PRODUCT Service APIs
-            url: /products-service/v3/api-docs
