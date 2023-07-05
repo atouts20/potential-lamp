@@ -1,4 +1,9 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/geoipdb
