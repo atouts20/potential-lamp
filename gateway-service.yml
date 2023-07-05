@@ -110,3 +110,16 @@ resilience4j:
     configs:
       resourceServer:
         timeoutDuration: 20s
+
+
+springdoc:
+    swagger-ui:
+        urls:
+        -   name: GEOIP Service APIs
+            url: /geoip-localisation-service/v3/api-docs
+        -   name: CLIENT Service APIs
+            url: /client-service/v3/api-docs
+        -   name: CATEGORIES Service APIs
+            url: /categories-service/v3/api-docs
+        -   name: PRODUCT Service APIs
+            url: /products-service/v3/api-docs
