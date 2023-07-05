@@ -1,56 +1,26 @@
-server:
-  port: 9888
-
-logging:
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
-
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      probes:
-        enabled: true
-      show-details: always
-      show-components: always
-  metrics:
-    tags:
-      application: ${spring.application.name}
-    distribution:
-      percentiles-histogram:
-        all: true
-        http.server.requests: true
-  tracing:
-    sampling:
-      probability: 1.0
-  prometheus:
-    metrics:
-      export:
-        step: 10s
-  info:
-    env:
-      enabled: true
-    java:
-      enabled: true
-    os:
-      enabled: true
+  health:
+    redis:
+      enabled: false
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
 
 spring:
   security:
     oauth2:
       client:
         registration:
-          keycloak:
+          gateway:
+            provider: spring
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
             scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: http://127.0.0.1:9888/login/oauth2/code/spring
         provider:
-          keycloak:
-            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
-
+          spring:
+            issuer-uri: http://localhost:9000
   session:
     store-type: redis
     redis:
@@ -62,36 +32,65 @@ spring:
       port: 11620
       password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
       username: default
-
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+
       default-filters:
         - SaveSession
-        - TokenRelay
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter:
-              replenishRate: 10
-              burstCapacity: 20
-              requestedTokens: 1
       routes:
-        - id: geoip-service
+        - id: resource-server
+          uri: http://localhost:9980/
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay=
+        - id: geo-service
+          uri: http://localhost:7896/
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay=
+        - id: catalogue-route
+          uri: http://localhost:7892/
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay=
+        - id: entite-route
+          uri: http://localhost:7892/
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay=
+        - id: geoip-route
           uri: http://localhost:7850/
           predicates:
             - Path=/api/v1/**
           filters:
-            - AddRequestHeader=X-Tenant,acme
-            - AddResponseHeader=X-Genre,fantasy
-            - name: CircuitBreaker
-              args:
-                name: GeoipService
-                fallbackUri: forward:/fallback
+            - TokenRelay=
+        - id: customer-route
+          uri: http://localhost:7893/
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay=
             - name: Retry
               args:
-                retries: 3
-                method: GET
+                retries: 30
+                methods: GET
                 backoff:
-                  firstBackoff: 50ms
+                  firstBackoff: 10ms
                   maxBackoff: 500ms
 
     consul:
@@ -99,18 +98,28 @@ spring:
         host: 127.0.0.1
         port: 8500
         enabled: true
-
-
 resilience4j:
   circuitbreaker:
     instances:
-      GeoipService:
+      resourceServer:
         slidingWindowSize: 10
         permittedNumberOfCallsInHalfOpenState: 5
         failureRateThreshold: 50
         waitDurationInOpenState: 10000
-        registerHealthIndicator: true
   timelimiter:
-    instances:
-      GeoipService:
-        timeoutDuration: 3s
+    configs:
+      resourceServer:
+        timeoutDuration: 20s
+
+
+springdoc:
+    swagger-ui:
+        urls:
+        -   name: GEOIP Service APIs
+            url: /geoip-localisation-service/v3/api-docs
+        -   name: CLIENT Service APIs
+            url: /client-service/v3/api-docs
+        -   name: CATEGORIES Service APIs
+            url: /categories-service/v3/api-docs
+        -   name: PRODUCT Service APIs
+            url: /products-service/v3/api-docs
