@@ -16,7 +16,7 @@ spring:
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
             scope: openid
-            authorization-grant-type: authorization_code 
+            authorization-grant-type: authorization_code
         provider:
           spring:
             issuer-uri: http://localhost:8080/auth/realms/atouts-realm
