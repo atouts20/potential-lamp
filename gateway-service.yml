@@ -38,7 +38,7 @@ management:
     os:
       enabled: true
 
-spring: 
+spring:
   security:
     oauth2:
       client:
@@ -49,7 +49,7 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/auth/realms/atouts-realm
+            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
 
   session:
     store-type: redis
@@ -76,7 +76,7 @@ spring:
               requestedTokens: 1
       routes:
         - id: geoip-service
-          uri: ${GEOIP_SERVICE_URL:http://localhost:7850}
+          uri: http://localhost:7850/
           predicates:
             - Path=/api/v1/**
           filters:
