@@ -76,7 +76,7 @@ spring:
             - name: CircuitBreaker
               args:
                 name: GeoipService
-                fallbackUri: forward:/books-fallback
+                fallbackUri: forward:/fallback
             - name: Retry
               args:
                 retries: 3
@@ -88,7 +88,7 @@ spring:
 resilience4j:
   circuitbreaker:
     instances:
-      bookService:
+      GeoipService:
         slidingWindowSize: 10
         permittedNumberOfCallsInHalfOpenState: 5
         failureRateThreshold: 50
@@ -96,5 +96,5 @@ resilience4j:
         registerHealthIndicator: true
   timelimiter:
     instances:
-      bookService:
+      GeoipService:
         timeoutDuration: 3s
