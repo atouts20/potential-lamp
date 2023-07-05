@@ -54,6 +54,18 @@ spring:
           keycloak:
             issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/auth/realms/atouts-realm
 
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  data:
+    redis:
+      host: redis-11620.c10.us-east-1-2.ec2.cloud.redislabs.com
+      port: 11620
+      password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
+      username: default
+
   cloud:
     gateway:
       default-filters:
