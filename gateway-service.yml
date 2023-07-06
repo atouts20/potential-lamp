@@ -7,18 +7,18 @@ logging:
     org.springframework.cloud.gateway: TRACE
 
 spring:
+
   security:
     oauth2:
       client:
-        provider:
-          my-keycloak-provider:
-            issuer-uri: http://localhost:8080/auth/realms/atouts-realm
         registration:
-          keycloak-spring-gateway-client:
-            provider: my-keycloak-provider
+          keycloak:
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
-            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri:  http://localhost:8080/auth/realms/atouts-realm
   session:
     store-type: redis
     redis:
