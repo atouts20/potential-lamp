@@ -19,7 +19,6 @@ spring:
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
             authorization-grant-type: authorization_code
-            redirect-uri: 'http://localhost:8080/login/oauth2/code/keycloak'
   session:
     store-type: redis
     redis:
