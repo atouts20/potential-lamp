@@ -49,7 +49,7 @@ spring:
         - SaveSession
       routes:
         - id: geoip-route
-          uri: http://localhost:7850/
+          uri: http://localhost:7850
           predicates:
             - Path=/api/v1/**
           filters:
