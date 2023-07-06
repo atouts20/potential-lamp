@@ -48,40 +48,10 @@ spring:
       default-filters:
         - SaveSession
       routes:
-        - id: resource-server
-          uri: http://localhost:9980/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: geo-service
-          uri: http://localhost:7896/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: catalogue-route
-          uri: http://localhost:7892/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
-        - id: entite-route
-          uri: http://localhost:7892/
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay=
         - id: geoip-route
           uri: http://localhost:7850/
           predicates:
             - Path=/api/v1/**
-          filters:
-            - TokenRelay=
-        - id: customer-route
-          uri: http://localhost:7893/
-          predicates:
-            - Path=/**
           filters:
             - TokenRelay=
             - name: Retry
