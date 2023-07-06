@@ -16,7 +16,7 @@ spring:
             client-id: atouts-gateway-client
             client-secret: cB9dMFvP57NS6mM2FiGAPM29Rv3znSzw
             scope: openid
-            redirect-uri: http://localhost:8080/realms/atouts-realm/protocol/openid-connect/auth
+
         provider:
           keycloak:
             issuer-uri: http://localhost:8080/realms/atouts-realm
