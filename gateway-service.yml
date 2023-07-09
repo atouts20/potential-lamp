@@ -61,6 +61,19 @@ spring:
                 backoff:
                   firstBackoff: 10ms
                   maxBackoff: 500ms
+        - id: geoip-route
+          uri: http://localhost:7860
+          predicates:
+            - Path=/api/v1/**
+          filters:
+            - TokenRelay=
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
 
     consul:
       config:
