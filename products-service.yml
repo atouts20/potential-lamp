@@ -2,8 +2,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/productsdb
-  application:
-    name: PRODUCT-SERVICE
 
   security:
     oauth2:
