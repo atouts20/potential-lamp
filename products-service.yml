@@ -2,12 +2,13 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/productsdb
-
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/atouts-realm
+
+
 # MULTIPART (MultipartProperties)
 # Multipart Properties
 
@@ -37,7 +38,7 @@ springdoc.swagger-ui.path: /docs/api-docs.html
 # Whether to resolve the multipart request lazily at the time of file or parameter access.
 # Please change this to the path where you want the uploaded files to be stored.
 file:
-  upload-dir: E:/BackendIntellij/kesimmo/kesimmo/product-service/upload-dir
+  upload-dir: E:/DossierAtouts/upload-dir
 
 logging:
   pattern:
