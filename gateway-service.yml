@@ -61,7 +61,7 @@ spring:
                 backoff:
                   firstBackoff: 10ms
                   maxBackoff: 500ms
-        - id: geoip-route
+        - id: product-route
           uri: http://localhost:7860
           predicates:
             - Path=/api/v1/**
