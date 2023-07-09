@@ -51,7 +51,7 @@ spring:
         - id: geoip-route
           uri: http://localhost:7850
           predicates:
-            - Path=/api/v1/**
+            - Path=/geoip/**
           filters:
             - TokenRelay=
             - name: Retry
@@ -64,7 +64,7 @@ spring:
         - id: product-route
           uri: http://localhost:7860
           predicates:
-            - Path=/api/v1/**
+            - Path=/product/**
           filters:
             - TokenRelay=
             - name: Retry
