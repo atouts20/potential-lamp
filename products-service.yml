@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/productsdb
+      uri: mongodb://169.254.52.65:27017/productsdb
   security:
     oauth2:
       resourceserver:
