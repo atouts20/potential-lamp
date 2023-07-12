@@ -77,7 +77,7 @@ spring:
 
     consul:
       config:
-        host: 169.254.52.65
+        host: 127.0.0.1
         port: 8500
         enabled: true
 resilience4j:

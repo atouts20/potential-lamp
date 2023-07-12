@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://169.254.52.65:5432/clientkycdb
+    url: jdbc:postgresql://localhost:5433/clientkycdb
     username: postgres
     password: P@@SSword2121
 
