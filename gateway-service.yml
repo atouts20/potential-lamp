@@ -89,6 +89,20 @@ spring:
                   firstBackoff: 10ms
                   maxBackoff: 500ms
 
+        - id: upload-route
+          uri: http://localhost:7777
+          predicates:
+            - Path=/api/v1/doc/**
+          filters:
+            - TokenRelay=
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
+
     consul:
       config:
         host: 127.0.0.1
