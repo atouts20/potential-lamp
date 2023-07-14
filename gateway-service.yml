@@ -76,7 +76,7 @@ spring:
                   maxBackoff: 500ms
 
         - id: product-route
-          uri: http://localhost:7750
+          uri: http://localhost:7760
           predicates:
             - Path=/api/v1/order/**
           filters:
