@@ -8,6 +8,17 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/atouts-realm
 
+
+# MULTIPART (MultipartProperties)
+# Multipart Properties
+  webflux:
+    multipart:
+      enabled: true
+      max-disk-usage-per-part: 1024KB
+      max-headers-size: 5KB
+      max-in-memory-size: 512KB
+      max-parts: 3
+
 # To disable Hystrix in Feign
 feign:
   hystrix:
