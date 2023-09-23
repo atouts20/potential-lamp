@@ -40,7 +40,7 @@ spring:
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/geoipdb
-    username: postgres
+    username: adminatouts
     password: P@@SSword2121
   security:
     oauth2:
