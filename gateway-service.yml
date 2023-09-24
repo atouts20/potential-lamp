@@ -128,3 +128,25 @@ resilience4j:
       resourceServer:
         timeoutDuration: 20s
 
+        
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+        primaryName: API Gateway Service
+      - url: /geoip-localisation-service/v3/api-docs
+        name: Localisation Service
+        primaryName: Localisation Service
+      - url: /order-service/v3/api-docs
+        name: Order Service
+        primaryName: Order Service
+      - url: /product-service/v3/api-docs
+        name: Product Service
+        primaryName: Product Service
