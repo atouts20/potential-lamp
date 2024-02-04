@@ -1,3 +1,29 @@
+spring:
+  cloud:
+    consul:
+      host: localhost 
+      port: 8500
+      
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://144.91.101.48:5432/comptedb
+    username: adminatouts
+    password: '#LddndAemadn1879#' 
+        
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    open-in-view: false 
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+ 
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
@@ -35,14 +61,10 @@ management:
     os:
       enabled: true
 
-spring:
-  datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/comptedb
-    username: adminatouts
-    password: P@@$$word2121
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8990/realms/atouts-realm
+ 
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8990/realms/atouts-realm
+

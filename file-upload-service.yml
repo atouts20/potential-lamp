@@ -1,12 +1,9 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/productsdb
+
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/atouts-realm
+          issuer-uri: https://security.atouts.org/realms/atouts-realm
 
 
 # MULTIPART (MultipartProperties)
