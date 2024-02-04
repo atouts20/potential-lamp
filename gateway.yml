@@ -1,0 +1,130 @@
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+  health:
+    redis:
+      enabled: false
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+
+spring:
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: atouts-gateway-client
+            client-secret: 6MJfRqyEawaAjOsu2bceh9OLSGNbOFOs
+            scope: openid,profile,email,offline_access
+
+
+        provider:
+          keycloak:
+            issuer-uri: https://security.atouts.org/realms/atouts-realm
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  #data:
+    #redis:
+      #host: redis-11620.c10.us-east-1-2.ec2.cloud.redislabs.com
+      #port: 11620
+      #password: t8CSfCefoozRej8KelfXuLr7VdvzeKCJ
+      #username: default
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+
+      default-filters:
+        - SaveSession
+        - TokenRelay
+        
+      routes:
+        - id: geoip-route
+          uri: http://localhost:7850
+          predicates:
+            - Path=/api/v1/localisation/**
+          filters:
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
+        - id: product-route
+          uri: http://localhost:7860
+          predicates:
+            - Path=/api/v1/product/**
+          filters:
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
+
+        - id: order-route
+          uri: http://localhost:7760
+          predicates:
+            - Path=/api/v1/order/**
+          filters:
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
+
+        - id: upload-route
+          uri: http://localhost:7777
+          predicates:
+            - Path=/api/v1/doc/**
+          filters:
+            
+            - name: Retry
+              args:
+                retries: 30
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 500ms
+
+    consul:
+      config:
+        host: localhost
+        port: 8500
+        enabled: true
+resilience4j:
+  circuitbreaker:
+    instances:
+      resourceServer:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+  timelimiter:
+    configs:
+      resourceServer:
+        timeoutDuration: 20s
+
