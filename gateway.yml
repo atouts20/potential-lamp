@@ -13,8 +13,10 @@ logging:
   level:
     org.springframework.cloud.gateway: TRACE
 
+  
 spring:
-
+  main:
+    web-application-type: reactive
   security:
     oauth2:
       client:
