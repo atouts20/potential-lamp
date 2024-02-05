@@ -13,23 +13,27 @@ logging:
   level:
     org.springframework.cloud.gateway: TRACE
 
-   
 spring:
-  main:
-    web-application-type: reactive
   security:
     oauth2:
       client:
-        registration:
-          keycloak:
-            client-id: atouts-gateway-client
-            client-secret: 6MJfRqyEawaAjOsu2bceh9OLSGNbOFOs
-            scope: openid,profile,email,offline_access
-
-
         provider:
           keycloak:
-            issuer-uri: https://security.atouts.org/realms/atouts-realm
+            token-uri: https://security.atouts.org/auth/realms/atouts-realm/protocol/openid-connect/token
+            authorization-uri: http://security.atouts.org/auth/realms/atouts-realm/protocol/openid-connect/auth
+            userinfo-uri: http://security.atouts.org/auth/realms/atouts-realm/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
+        registration:
+          keycloak-with-test-scope:
+            provider: keycloak
+            client-id: atouts-gateway-client
+            client-secret: 6MJfRqyEawaAjOsu2bceh9OLSGNbOFOs
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+            scope: "openid profile email phone address"
+
+ 
+    
   session:
     store-type: redis
     redis:
@@ -112,7 +116,11 @@ spring:
                   firstBackoff: 10ms
                   maxBackoff: 500ms
 
-    consul:
+    consul: 
+      discovery:
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        healthCheckPath: ${management.server.servlet.context-path}/actuator/health
+        healthCheckInterval: 15s
       config:
         host: localhost
         port: 8500
